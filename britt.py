@@ -31,7 +31,7 @@ class ExtDecl(c_ast.NodeVisitor):
     self.complexities.append((node.decl.name, britt_metric(node)))
 
   def __str__(self):
-    res = ['  %s complexity: %d' % item for item in self.complexities]
+    res = ['  %s complexity: %d' % item for item in self.complexities if not item[0].startswith('__')]
     return'\n'.join(res)
 
 

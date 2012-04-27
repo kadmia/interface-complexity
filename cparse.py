@@ -23,7 +23,7 @@ def file_walker(root):
   return results
 
 def parse(fil):
-  ast = parse_file(fil, use_cpp=True, cpp_args=r'-Ifake_libc_include')
+  ast = parse_file(fil, use_cpp=True)
   ed = ExtDecl()
   ed.visit(ast)
   return fil, ed
