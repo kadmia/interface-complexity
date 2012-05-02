@@ -8,14 +8,11 @@ from britt import *
 from utils import *
 
 
-f = open('ps.h', 'r')
+#f = open('ps.h', 'r')
 
 parser = c_parser.CParser()
 
 ed = ExtDecl()
 
-def inString(l, s):
-  for i in l:
-    if i in s:
-      return True
-  return False
+pipe = Popen(['cpp', 'testfiles/helloworld.c'], stdout=PIPE, universal_newlines=True)
+text = pipe.communicate()[0]

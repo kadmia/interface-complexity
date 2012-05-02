@@ -9,17 +9,19 @@ def inString(l, s):
   return False
 
 def extractCode(text):
+  """
+  This is a method that strips out all of the include files after a file has been preprocessed
+  """
   extracted = []
   include_depth = 0
   for line in text.split('\n'):
     reg = regex.match(line)
     if reg:
       flag = reg.group('flag')
-      if (flag == 1):
+      if (flag == '1'):
         include_depth += 1
-      elif (flag == 2):
-        include -= 1
+      elif (flag == '2'):
+        include_depth -= 1
     if (include_depth == 0):
       extracted.append(line)
-  return extracted
-
+  return '\n'.join(extracted)

@@ -1,7 +1,8 @@
 import sys
 import os
 
-from pycparser import parse_file, c_ast
+from pycparser import parse_file, c_ast, c_parser
+from subprocess import Popen, PIPE
 from britt import *
 from utils import *
 
@@ -23,7 +24,11 @@ def file_walker(root):
   return results
 
 def parse(fil):
-  ast = parse_file(fil, use_cpp=True)
+  pipe = Popen(['cpp',fil], stdout=PIPE, universal_newlines=True)
+  text = pipe.communicate()[0]
+  extracted_text = extractCode(text)
+  parser = c_parser.CParser()
+  ast = parser.parse(extracted_text)
   ed = ExtDecl()
   ed.visit(ast)
   return fil, ed

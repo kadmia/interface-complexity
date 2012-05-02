@@ -85,28 +85,3 @@ def britt_metric(ast, seen=[]):
     print ast
     return 1
 
-
-#Not a good route to take, bname is too ambiguous
-#Unfinished - decided to pursue the node visitor instead
-#def britt_metric(ast):
-#
-#  for name, child in ast.children():
-#    bname = name.rstrip('[0123456789]')
-#
-#    #top of the ast - contains declarations, typedefs and function defs
-#    if (bname == 'ext'):
-#      return britt_metric(child)
-#
-#    # name: the variable being declared
-#    # quals: list of qualifiers (const, volatile)
-#    # funcspec: list function specifiers (i.e. inline in C99)
-#    # storage: list of storage specifiers (extern, register, etc.)
-#    # type: declaration type (probably nested with all the modifiers)
-#    # init: initialization value, or None
-#    # bitsize: bit field size, or None
-#    #TODO add quals, storage etc...
-#    elif (bname == 'decl'):
-#      return britt_metric(child)
-#    elif (bname == 'type'):
-#      return britt_metric(child)
-#    elif (bname == '

@@ -86,4 +86,3 @@ typedef struct var {
 #define	PTRWIDTH	8
 #endif
 
-#include "extern.h"
