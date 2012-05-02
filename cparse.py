@@ -26,9 +26,9 @@ def file_walker(root):
 def parse(fil):
   pipe = Popen(['cpp',fil], stdout=PIPE, universal_newlines=True)
   text = pipe.communicate()[0]
-  extracted_text = extractCode(text)
+  text = extractCode(text)
   parser = c_parser.CParser()
-  ast = parser.parse(extracted_text)
+  ast = parser.parse(text)
   ed = ExtDecl()
   ed.visit(ast)
   return fil, ed
