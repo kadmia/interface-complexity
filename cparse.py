@@ -24,9 +24,9 @@ def file_walker(root):
   return results
 
 def parse(fil):
-  pipe = Popen(['clang', '-E', '-nostdinc', '-I/Users/adam/programming/openbsd/src/sys', '-I/Users/adam/programming/openbsd/src/sys/arch/i386', '-I/Users/adam/programming/interface-complexity/fake_libc_include/', fil], stdout=PIPE, universal_newlines=True)
+  pipe = Popen(['gcc', '-E', '-nostdinc', '-I/home/adam/programming/openbsd/src/sys/sys', '-I/home/adam/programming/openbsd/src/sys', '-I/home/adam/programming/openbsd/src/sys/arch/i386', '-I/Users/adam/programming/interface-complexity/fake_libc_include/', fil], stdout=PIPE, universal_newlines=True)
   text = pipe.communicate()[0]
-  text = extractCode(text)
+  #text = extractCode(text)
   parser = c_parser.CParser()
   ast = parser.parse(text)
   ed = ExtDecl()
