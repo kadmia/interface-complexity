@@ -14,5 +14,6 @@ parser = c_parser.CParser()
 
 ed = ExtDecl()
 
-pipe = Popen(['cpp', 'testfiles/helloworld.c'], stdout=PIPE, universal_newlines=True)
+pipe = Popen(['cpp', '/Users/adam/programming/openbsd/src/sys/kern/clock_subr.c'], stdout=PIPE, universal_newlines=True)
 text = pipe.communicate()[0]
+#ast = parser.parse(text)

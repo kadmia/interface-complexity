@@ -76,10 +76,13 @@ def britt_metric(ast, seen=[]):
     #self referencing struct
     if ast.name in seen:
       return 2
-    for decl in ast.decls:
+    #empty list is for case when there is no struct body
+    for decl in ast.decls or []:
       prod *= britt_metric(decl, seen.append(ast.name))
     types[ast.name] = prod
     return prod
+  elif (typ == c_ast.Enum):
+    return len(ast.values.enumerators)
   else:
     print 'ast not yet defined'
     print ast

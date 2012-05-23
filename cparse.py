@@ -24,7 +24,7 @@ def file_walker(root):
   return results
 
 def parse(fil):
-  pipe = Popen(['cpp',fil], stdout=PIPE, universal_newlines=True)
+  pipe = Popen(['clang', '-E', '-nostdinc', '-I/Users/adam/programming/openbsd/src/sys', '-I/Users/adam/programming/openbsd/src/sys/arch/i386', '-I/Users/adam/programming/interface-complexity/fake_libc_include/', fil], stdout=PIPE, universal_newlines=True)
   text = pipe.communicate()[0]
   text = extractCode(text)
   parser = c_parser.CParser()
@@ -39,7 +39,6 @@ if __name__ == '__main__':
     res = file_walker(f)
   else:
     res = [parse(f)]
-  print res
   for f, r in res:
     print f
     print r
