@@ -7,12 +7,14 @@ prim_void = _c
 prim_char = 8 * _c
 prim_short = 2 * prim_char
 prim_int = 2 * prim_short
+prim_Bool = 2
 
 types = {
     'void': prim_void,
     'char': prim_char,
     'short': prim_short,
     'int': prim_int,
+    '_Bool': prim_Bool,
     }
 
 
@@ -22,7 +24,10 @@ class ExtDecl(c_ast.NodeVisitor):
   
   def visit_Decl(self, node):
     #This only works when structs are here
-    self.complexities.append((node.type.name, britt_metric(node)))
+    if type(node.type) == c_ast.Struct:
+      self.complexities.append((node.type.name, britt_metric(node)))
+#    else:
+#        print node.type.type
 
   def visit_Typedef(self, node):
     self.complexities.append((node.name, britt_metric(node)))
@@ -31,7 +36,7 @@ class ExtDecl(c_ast.NodeVisitor):
     self.complexities.append((node.decl.name, britt_metric(node)))
 
   def __str__(self):
-    res = ['  %s complexity: %d' % item for item in self.complexities if not item[0].startswith('__')]
+    res = ['  %s complexity: %d' % item for item in self.complexities]
     return'\n'.join(res)
 
 
@@ -58,6 +63,7 @@ def britt_metric(ast, seen=[]):
       return types[ast.names[0]]
     except KeyError:
       print 'KEY ERROR'
+      print ast.names
       return 1
   elif (typ == c_ast.ArrayDecl):
     return 2 * britt_metric(ast.type)
