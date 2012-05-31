@@ -1,12 +1,11 @@
 from pycparser import c_ast
 import math
+from operator import itemgetter
 
 pow2 = lambda x: 2**x
 log2 = lambda x: math.log(x, 2)
 
-results = []
 _c = 1
-
 prim_void = _c
 prim_char = pow2(8)
 prim_short = pow2(16)
@@ -18,6 +17,9 @@ prim_double = pow2(72)
 prim_long_double = pow2(108)
 prim_Bool = pow2(1)
 
+"""
+This is the list of all known types and their complexity.
+"""
 types = {
     'void': prim_void,
     'char': prim_char,
@@ -33,6 +35,13 @@ types = {
 
 
 class ExtDecl(c_ast.NodeVisitor):
+  """
+  This class represents external declarators. This is where all types are
+  defined, with the exception of recursive types, which are created as needed
+  in the metric and added to the dict of known types when needed.
+  
+  It uses the node visitor convention.
+  """
   def __init__(self):
     self.complexities = []
   
@@ -47,11 +56,14 @@ class ExtDecl(c_ast.NodeVisitor):
     self.complexities.append((node.decl.name, log2(britt_metric(node))))
 
   def __str__(self):
-    res = ['  %s complexity: %f' % item for item in self.complexities]
+    res = ['  %s complexity: %f' % item for item in sorted(self.complexities, key=itemgetter(1))]
     return'\n'.join(res)
 
 
 def britt_metric(ast, seen=[]):
+  """
+  This is where the complexity of each type is calculated.
+  """
   global types
   typ = type(ast)
 
@@ -69,13 +81,12 @@ def britt_metric(ast, seen=[]):
   elif (typ == c_ast.TypeDecl):
     return britt_metric(ast.type)
   elif (typ == c_ast.IdentifierType):
-    #FIXME
     try:
       return types[ast.names[0]]
     except KeyError:
       print 'KEY ERROR - type not in environment'
       print ast
-      return 1
+      raise SystemExit
   elif (typ == c_ast.ArrayDecl):
     return 2 * britt_metric(ast.type)
   elif (typ == c_ast.PtrDecl):
@@ -103,4 +114,4 @@ def britt_metric(ast, seen=[]):
   else:
     print 'ast not yet defined'
     print ast
-    return 1
+    raise SystemExit
