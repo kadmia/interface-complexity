@@ -1,19 +1,33 @@
 from pycparser import c_ast
+import math
+
+pow2 = lambda x: 2**x
+log2 = lambda x: math.log(x, 2)
 
 results = []
-_c = 2
+_c = 1
 
 prim_void = _c
-prim_char = 8 * _c
-prim_short = 2 * prim_char
-prim_int = 2 * prim_short
-prim_Bool = 2
+prim_char = pow2(8)
+prim_short = pow2(16)
+prim_int = pow2(32)
+prim_long = pow2(32)
+prim_long_long = pow2(64)
+prim_float = pow2(36)
+prim_double = pow2(72)
+prim_long_double = pow2(108)
+prim_Bool = pow2(1)
 
 types = {
     'void': prim_void,
     'char': prim_char,
     'short': prim_short,
     'int': prim_int,
+    'long': prim_long,
+    'long long': prim_long_long,
+    'float': prim_float,
+    'double': prim_double,
+    'long double': prim_long_double,
     '_Bool': prim_Bool,
     }
 
@@ -23,20 +37,17 @@ class ExtDecl(c_ast.NodeVisitor):
     self.complexities = []
   
   def visit_Decl(self, node):
-    #This only works when structs are here
     if type(node.type) == c_ast.Struct:
-      self.complexities.append((node.type.name, britt_metric(node)))
-#    else:
-#        print node.type.type
+      self.complexities.append((node.type.name, log2(britt_metric(node))))
 
   def visit_Typedef(self, node):
-    self.complexities.append((node.name, britt_metric(node)))
+    self.complexities.append((node.name, log2(britt_metric(node))))
 
   def visit_FuncDef(self, node):
-    self.complexities.append((node.decl.name, britt_metric(node)))
+    self.complexities.append((node.decl.name, log2(britt_metric(node))))
 
   def __str__(self):
-    res = ['  %s complexity: %d' % item for item in self.complexities]
+    res = ['  %s complexity: %f' % item for item in self.complexities]
     return'\n'.join(res)
 
 
@@ -62,8 +73,8 @@ def britt_metric(ast, seen=[]):
     try:
       return types[ast.names[0]]
     except KeyError:
-      print 'KEY ERROR'
-      print ast.names
+      print 'KEY ERROR - type not in environment'
+      print ast
       return 1
   elif (typ == c_ast.ArrayDecl):
     return 2 * britt_metric(ast.type)
@@ -93,4 +104,3 @@ def britt_metric(ast, seen=[]):
     print 'ast not yet defined'
     print ast
     return 1
-
